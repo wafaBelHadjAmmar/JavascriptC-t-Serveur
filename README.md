@@ -1,4 +1,4 @@
-# -JavascriptC-t-Serveur-
+# -Javascript-Serveur-
 Acquis d’apprentissage :
 ● Développer une application côté serveur avec Node.js : construire un serveur HTTP
 ● Pratiquer la particularité de Single Thread: Appliquer une architecture non bloquante de
