@@ -1,0 +1,77 @@
+<html>
+
+
+
+<body>
+	<!--
+		<h2>  List Contacts :  </h2>
+
+<a href="/add/contact" > Add Contact </a>
+
+<table border="2">
+
+	<tr>
+		<td>ID</td>
+		<td>Full Name</td>
+		<td>Phone </td>
+		<td>Action</td>
+	</tr>
+<% if(users.length > 0) {  %>
+<% for(var i=0 ; i< users.length ; i++) {    %>
+<tr>
+		<td><%= users[i]._id   %></td>
+		<td><%= users[i].FullName   %></td>
+		<td><%= users[i].Phone   %> </td>
+		<td>
+			<a href="/edit/contact/<%= users[i]._id   %>">Edit</a>
+			<a href="/delete/<%= users[i]._id   %>">Remove</a>
+			<a href="/<%= users[i]._id   %>">Show</a>
+		</td>
+</tr>
+
+<%   }  %>
+<%   }else{  %>
+<h3> No contact found !!! </3>
+<%   }  %>
+</table>
+	-->
+
+<p></p>
+<br>
+<h3>Socket IO:</h3>
+<input type="text" name="msg" id="msg"><br>
+<button type="submit" onclick="SendNotif()">Envoyer</button>
+
+
+<script src="/jquery/jquery.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+		//Demander handskake
+ 		var socket = io();
+
+		function SendNotif(){
+			var message = document.getElementById('msg').value;
+			if(message.trim !== ''){
+				socket.emit('send-notification', message);
+			}
+		}
+		socket.on('new-notification',(content)=>{
+			console.log(content);
+			alert(content, "New notification!!!");
+		})
+
+
+
+
+
+		socket.on('message', function(data){
+			console.log(data);
+			$('body').append('<p> '+ data +'</p>');
+		})
+</script>
+
+
+</body>
+
+
+</html>

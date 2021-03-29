@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+  </head>
+  <body>
+ 
+<form id="chatF">
+  <input type="text" id="msg" /> 
+  <button type="submit" >Send</button>
+</form>
+  
+  <div class="chat-message">
+    <div class="message">
+      <p class="text"></p>
+      <p id="typing"></p>
+    </div>
+  </div>
+  
+
+  <script src="/jquery/jquery.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const chatForm = document.getElementById('chatF');
+     const typ = document.getElementById('typing');
+      const msg = document.getElementById('msg');
+    const socket = io();
+
+// typing
+msg.addEventListener('keyup',function(){
+ socket.emit('typing', {
+    isTyping: msg.value.length > 0,
+    name: "wafa"
+ });
+});
+socket.on('typing', function(data){
+  console.log(data);
+    const{isTyping, name} =  data;
+    if(!isTyping) {
+      typ.innerHTML = "";
+      return;
+    }else{
+    typ.innerHTML =`<p>${name} is typing...</p>`;
+  }
+});
+
+   socket.on('message', message => {
+      console.log(message);
+      afficheMSG(message);
+    });
+
+
+    //msg submit
+    chatForm.addEventListener('submit', e =>{
+      e.preventDefault();
+    // get msg text  
+      const msg = e.target.elements.msg.value;
+    // emit msg to server
+      socket.emit('chatMsg', msg);
+      e.target.elements.msg.value = "";
+    });
+    // output msg to DOM
+    function afficheMSG(msg){
+      const div = document.createElement('div');
+      div.classList.add('message');
+      div.innerHTML = ` <p class="text">
+      <span>${msg.username} __${msg.time}</span>
+      ${msg.msg}</p>`;
+      document.querySelector('.chat-message').appendChild(div);
+    }
+
+    /*socket.on('new-notification', (resp) => {
+      alert(resp, 'New notification')
+    });
+    
+    function sendMessage() {
+      let msg = document.getElementById('msg').value;
+      if(msg.trim() !== '') {
+        socket.emit("send-notification", msg);
+      }
+      
+    }*/
+  </script>
+</body>
+</html>
+
+
